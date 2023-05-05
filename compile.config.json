@@ -1,0 +1,96 @@
+[
+  {
+    "title": "首页",
+    "page": "pages/home/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null
+  },
+  {
+    "title": "登录页面",
+    "page": "subpackages/login/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null
+  },
+  {
+    "title": "button-示例",
+    "page": "examples/button/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "cascader-示例",
+    "page": "examples/cascader/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "grid-示例",
+    "page": "examples/grid/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "cell-示例",
+    "page": "examples/cell/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "checkbox-示例",
+    "page": "examples/checkbox/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "radio-示例",
+    "page": "examples/radio/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "keyboard-示例",
+    "page": "examples/keyboard/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "h5-示例",
+    "page": "examples/h5/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "result-示例",
+    "page": "examples/result/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  },
+  {
+    "title": "form-示例",
+    "page": "examples/form/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
+  }
+]
