@@ -1,0 +1,21 @@
+@cover-cls: ~'@{prefix}-cover';
+
+.@{cover-cls} {
+  width: 100%;
+  overflow: hidden;
+
+  &--absolute {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &--relative {
+    position: relative;
+  }
+
+  &__image {
+    width: 100%;
+    height: inherit;
+  }
+}

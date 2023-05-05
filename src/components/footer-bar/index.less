@@ -1,0 +1,22 @@
+@footer-bar-cls: ~'@{prefix}-footer-bar';
+
+page {
+  --footer-bar-layer: 899;
+  --footer-bar-vertical-padding: 40rpx;
+  --footer-bar-horizontal-padding: 40rpx;
+}
+
+.@{footer-bar-cls} {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--footer-bar-layer);
+  padding: 0 var(--footer-bar-horizontal-padding);
+  padding-top: var(--footer-bar-vertical-padding);
+  background-color: var(--footer-bar-background-color, inherit);
+
+  &__bottom {
+    padding-bottom: var(--footer-bar-vertical-padding);
+  }
+}

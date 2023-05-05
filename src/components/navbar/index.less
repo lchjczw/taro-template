@@ -1,0 +1,73 @@
+@import url('../../styles/mixins/ellipsis.less');
+@import url('../../styles/mixins/hairline.less');
+
+@navbar-cls: ~'@{prefix}-navbar';
+
+page {
+  --navbar-height: 80rpx;
+  --navbar-background-color: var(--color-white);
+  --navbar-title-font-size: var(--size-lg);
+  --navbar-title-text-color: var(--color-text);
+}
+
+.@{navbar-cls} {
+  position: relative;
+  text-align: center;
+  user-select: none;
+  height: var(--navbar-height);
+  line-height: var(--navbar-height);
+  overflow: hidden;
+
+  &--fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  &--border {
+    .hairline-bottom();
+  }
+
+  &__placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--color-white);
+  }
+
+  &__wrapper {
+    position: relative;
+    height: 100%;
+  }
+
+  &__left {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    font-size: var(--size-md);
+    padding: 0 var(--size-lg);
+
+    &:active {
+      opacity: var(--opacity-active);
+    }
+
+    &-icon {
+      vertical-align: middle;
+    }
+  }
+
+  &__title {
+    max-width: 50%;
+    margin: 0 auto;
+    color: var(--navbar-title-text-color);
+    font-weight: var(--weight-bold);
+    font-size: var(--navbar-title-font-size);
+    .ellipsis();
+  }
+}

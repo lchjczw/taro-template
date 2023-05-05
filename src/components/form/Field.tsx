@@ -1,0 +1,727 @@
+import type {
+  FieldType,
+  FieldRule,
+  FieldTextAlign,
+  FieldValidateError,
+  FieldClearTrigger,
+  FieldFormatTrigger,
+  FieldAutosizeConfig,
+  FieldValidationStatus,
+  FieldFormSharedProps,
+  FieldValidateTrigger
+} from './types'
+
+import { Icon, type IconName } from '../icon'
+import { Cell, cellSharedProps } from '../cell'
+import { FORM_KEY } from './Form'
+
+import {
+  Input,
+  Textarea,
+  Label,
+  type InputProps,
+  type ViewProps,
+  type ITouchEvent
+} from '@tarojs/components'
+
+import Bem from '@txjs/bem'
+import extend from 'extend'
+import { pick, toArray } from '@txjs/shared'
+import { useLoad } from '@tarojs/taro'
+import { addUnit, nextTick } from '@/utils'
+
+import {
+  defineComponent,
+  ref,
+  reactive,
+  computed,
+  provide,
+  watch,
+  getCurrentInstance,
+  type PropType,
+  type ExtractPropTypes
+} from 'vue'
+
+import {
+  isNil,
+  isBoolean,
+  isValidString,
+  notNil
+} from '@txjs/bool'
+
+import {
+  FIELD_INJECTION_KEY,
+  useId,
+  useParent,
+  useExpose
+} from '../composables'
+
+import {
+  numericProp,
+  makeStringProp,
+  preventDefault
+} from '../utils'
+
+import {
+  cutString,
+  getRuleMessage,
+  getStringLength,
+  isEmptyValue,
+  runRuleValidator,
+  runSyncRule,
+  resizeTextarea,
+  formatNumber
+} from './utils'
+
+const [name, bem] = Bem('field')
+
+export const fieldSharedProps = {
+  id: String,
+  name: String,
+  clearable: Boolean,
+  errorMessage: String,
+  limitClass: String,
+  showWordLimit: Boolean,
+  type: makeStringProp<FieldType>('text'),
+  rules: Array as PropType<FieldRule[]>,
+  autosize: [Boolean, Object] as PropType<boolean | FieldAutosizeConfig>,
+  titleAlign: String as PropType<FieldTextAlign>,
+  errorMessageAlign: String as PropType<FieldTextAlign>,
+  inputAlign: String as PropType<FieldTextAlign>,
+  autoFocus: Boolean as PropType<InputProps['focus']>,
+  leftIcon: String as PropType<IconName>,
+  rightIcon: String as PropType<IconName>,
+  formatter: Function as PropType<(value: string) => string>,
+  clearIcon: makeStringProp<IconName>('clear'),
+  clearTrigger: makeStringProp<FieldClearTrigger>('focus'),
+  formatTrigger: makeStringProp<FieldFormatTrigger>('onChange'),
+  onTap: Function as PropType<ViewProps['onTap']>,
+  onClickInput: Function as PropType<ViewProps['onTap']>,
+  onClickLeftIcon: Function as PropType<ViewProps['onTap']>,
+  onClickRightIcon: Function as PropType<ViewProps['onTap']>,
+  onClear: Function as PropType<ViewProps['onTap']>,
+  onConfirm: Function as PropType<InputProps['onConfirm']>,
+  onInput: Function as PropType<(value: string) => void>,
+  onFocus: Function as PropType<InputProps['onFocus']>,
+  onBlur: Function as PropType<InputProps['onBlur']>,
+  onStartValidate: Function as PropType<() => void>,
+  onEndValidate: Function as PropType<(error: {
+    status: FieldValidationStatus,
+    message: string
+  }) => void>,
+  'onUpdate:value': Function as PropType<(value: unknown) => void>,
+  inset: {
+    type: Boolean,
+    default: null
+  },
+  error: {
+    type: Boolean,
+    default: null
+  },
+  readonly: {
+    type: Boolean,
+    default: null
+  },
+  colon: {
+    type: Boolean,
+    default: null
+  },
+  value: {
+    type: [String, Number, Array, Object],
+    default: ''
+  }
+}
+
+export const inputSharedProps = {
+  password: Boolean,
+  placeholder: String,
+  placeholderClass: String,
+  confirmHold: Boolean,
+  placeholderStyle: null as unknown as PropType<string>,
+  cursor: numericProp as PropType<InputProps['cursor']>,
+  selectionStart: numericProp as PropType<InputProps['selectionStart']>,
+  selectionEnd: numericProp as PropType<InputProps['selectionEnd']>,
+  maxlength: numericProp as PropType<InputProps['maxlength']>,
+  confirmType: String as PropType<InputProps['confirmType']>,
+  disabled: {
+    type: Boolean,
+    default: null
+  }
+}
+
+const fieldProps = extend({}, cellSharedProps, fieldSharedProps, inputSharedProps)
+
+export type FieldProps = ExtractPropTypes<typeof fieldProps>
+
+export default defineComponent({
+  name,
+
+  props: fieldProps,
+
+  setup(props, { slots, emit }) {
+    const inputRef = ref<typeof Input>()
+    const customValue = ref<() => unknown>()
+    const focused = ref(props.autoFocus)
+    const state = reactive({
+      status: 'unvalidated' as FieldValidationStatus,
+      focused: false,
+      validateMessage: ''
+    })
+
+    const id = useId()
+    const vm = getCurrentInstance()
+    const { parent: form } = useParent(FORM_KEY)
+
+    const hasInputOrTextarea = computed(() =>
+      !!(slots.input ?? slots.default)
+    )
+
+    const showClear = computed(() => {
+      const readonly = getProp('readonly')
+
+      if (props.clearable && !readonly) {
+        const hasValue = getModelValue() !== ''
+        const trigger = props.clearTrigger === 'always' || (props.clearTrigger === 'focus' && state.focused)
+        return hasValue && trigger
+      }
+
+      return false
+    })
+
+    const formValue = computed(() => {
+      if (customValue.value && hasInputOrTextarea.value) {
+        return customValue.value()
+      }
+      return props.value
+    })
+
+    const showError = computed(() => {
+      if (isBoolean(props.error)) {
+        return props.error
+      }
+
+      if (form && form.props.showError && state.status === 'failed') {
+        return true
+      }
+
+      return false
+    })
+
+    const titleStyle = computed(() => {
+      const style = props.titleStyle ?? {}
+      const titleWidth = getProp('titleWidth')
+
+      if (titleWidth) {
+        style.width = addUnit(titleWidth)
+      }
+
+      return style
+    })
+
+    const inputType = computed(() => {
+      if (props.type === 'password' || props.password) {
+        return { password: true }
+      }
+
+      if (props.type !== 'textarea') {
+        return { type: props.type }
+      }
+
+      return {}
+    })
+
+    const getModelValue = () =>  String(props.value) || ''
+
+    const getProp = <T extends FieldFormSharedProps>(key: T) => {
+      if (notNil(props[key])) {
+        return props[key]
+      }
+
+      if (form && notNil(form.props[key])) {
+        return form.props[key]
+      }
+    }
+
+    const getRules = () => {
+      let { name, rules = [] } = props
+
+      if (name && form && form.props.rules?.[name]) {
+        rules = rules.concat(form.props.rules[name])
+      }
+
+      return rules
+    }
+
+    const runRules = (rules: FieldRule[]) =>
+      rules.reduce(
+        (promise, rule) =>
+          promise.then(() => {
+            if (state.status === 'failed') {
+              return
+            }
+
+            let { value } = formValue
+
+            if (rule.formatter) {
+              value = rule.formatter(value, rule)
+            }
+
+            if (!runSyncRule(value, rule)) {
+              state.status = 'failed'
+              state.validateMessage = getRuleMessage(value, rule)
+              return
+            }
+
+            if (rule.validator) {
+              if (isEmptyValue(value) && rule.validateEmpty === false) {
+                return
+              }
+
+              return runRuleValidator(value, rule)
+                .then((result) => {
+                  if (isValidString(result)) {
+                    state.status = 'failed'
+                    state.validateMessage = result
+                  } else if (result === false) {
+                    state.status = 'failed'
+                    state.validateMessage = getRuleMessage(value, rule)
+                  }
+                })
+            }
+          }),
+        Promise.resolve()
+      )
+
+    const resetValidation = () => {
+      state.status = 'unvalidated'
+      state.validateMessage = ''
+    }
+
+    const endValidate = () =>
+      props.onEndValidate?.({
+        status: state.status,
+        message: state.validateMessage
+      })
+
+    const validate = (rules = getRules()) =>
+      new Promise<FieldValidateError | void>((resolve) => {
+        resetValidation()
+
+        if (rules) {
+          props.onStartValidate?.()
+
+          runRules(rules)
+            .then(() => {
+              if (state.status === 'failed') {
+                resolve({
+                  name: props.name,
+                  message: state.validateMessage
+                })
+                endValidate()
+              } else {
+                state.status = 'passed'
+                resolve()
+                endValidate()
+              }
+            })
+        } else {
+          resolve()
+        }
+      })
+
+    const validateWithTrigger = (trigger: FieldValidateTrigger) => {
+      const rules = getRules()
+
+      if (form && rules.length) {
+        const { validateTrigger } = form.props
+        const defaultTrigger = toArray(validateTrigger).includes(trigger)
+        const fieldRules = rules.filter((rule) => {
+          if (rule.trigger) {
+            return toArray(rule.trigger).includes(trigger)
+          }
+          return defaultTrigger
+        })
+
+        if (fieldRules.length) {
+          validate(fieldRules)
+        }
+      }
+    }
+
+    const limitValueLength = (value: string) => {
+      const { maxlength } = props
+
+      if(notNil(maxlength) && getStringLength(value) > maxlength) {
+        const modelValue = getModelValue()
+
+        if (modelValue && getStringLength(modelValue) === +maxlength) {
+          return modelValue
+        }
+
+        return cutString(value, +maxlength)
+      }
+
+      return value
+    }
+
+    const updateValue = (
+      value: string,
+      trigger: FieldFormatTrigger = 'onChange'
+    ) => {
+      const { type, formatter, formatTrigger, value: modelValue } = props
+      value = limitValueLength(value)
+
+      if (type === 'number' || type === 'digit') {
+        const isNumber = props.type === 'digit'
+        value = formatNumber(value, isNumber, isNumber)
+      }
+
+      if (formatter && trigger === formatTrigger) {
+        value = formatter(value)
+      }
+
+      if (value !== modelValue) {
+        emit('update:value', value)
+        props.onInput?.(value)
+      }
+    }
+
+    const onInput = (event: ITouchEvent) => {
+      updateValue(event.detail.value)
+    }
+
+    const focus = () => {
+      focused.value = true
+    }
+
+    const blur = () => {
+      focused.value = false
+    }
+
+    const adjustTextareaSize = () => {
+      if (props.type === 'textarea' && props.autosize && inputRef.value) {
+        resizeTextarea(inputRef, props.autosize)
+      }
+    }
+
+    const onFocus = (event: ITouchEvent) => {
+      state.focused = true
+      focus()
+      props.onFocus?.(event)
+      nextTick(adjustTextareaSize)
+
+      if (getProp('readonly')) {
+        blur()
+      }
+    }
+
+    const onBlur = (event: ITouchEvent) => {
+      if (getProp('readonly')) {
+        return
+      }
+
+      state.focused = false
+      blur()
+      updateValue(getModelValue(), 'onBlur')
+      props.onBlur?.(event)
+      validateWithTrigger('onBlur')
+      nextTick(adjustTextareaSize)
+    }
+
+    const onClear = (event: ITouchEvent) => {
+      preventDefault(event, true)
+      emit('update:value', '')
+      props.onClear?.(event)
+    }
+
+    const getInputId = () => props.id || `${id}-input`
+
+    const getValidationStatus = () => state.status
+
+    const renderInput = () => {
+      const controlClass = bem('control', [
+        getProp('inputAlign'),
+        {
+          error: showError.value,
+          disabled: getProp('disabled'),
+          custom: !!slots.input,
+          textarea: props.type === 'textarea'
+        }
+      ])
+
+      const placeholderClass = [
+        bem('placeholder', { error: showError.value }),
+        props.placeholderClass
+      ]
+        .filter(Boolean)
+        .join(' ')
+
+      if (hasInputOrTextarea.value) {
+        return (
+          <view
+            class={controlClass}
+            onTap={props.onClickInput}
+          >
+            {slots.input?.() || slots.default?.()}
+          </view>
+        )
+      }
+
+      const inputAttrs = {
+        ...pick(props, [
+          'name',
+          'cursor',
+          'maxlength',
+          'selectionStart',
+          'selectionEnd',
+          'confirmType',
+          'placeholder',
+          'placeholderStyle',
+          'onConfirm'
+        ]),
+        id: getInputId(),
+        ref: inputRef,
+        class: controlClass,
+        focus: focused.value,
+        value: getModelValue(),
+        confirmHold: props.confirmHold as any,
+        disabled: getProp('disabled') || getProp('readonly'),
+        'aria-labelledby': props.label ? `${id}-label` : undefined,
+        placeholderClass,
+        onBlur,
+        onFocus,
+        onInput,
+        onTap: props.onClickInput
+      }
+
+      if (props.type === 'textarea') {
+        const textareaProps = {
+          autoHeight: !!props.autosize
+        }
+
+        if (process.env.TARO_ENV === 'weapp') {
+          extend(textareaProps, {
+            disableDefaultPadding: true
+          })
+        } else if (process.env.TARO_ENV === 'alipay') {
+          inputAttrs.maxlength = -1
+        }
+
+        return (
+          <Textarea
+            {...textareaProps}
+            {...inputAttrs}
+          />
+        )
+      }
+
+      const inputProps = {}
+
+      if (process.env.TARO_ENV === 'alipay') {
+        extend(inputProps, {
+          enableNative: true
+        })
+      }
+
+      return (
+        <Input
+          {...inputType.value}
+          {...inputAttrs}
+        />
+      )
+    }
+
+    const renderLeftIcon = () => {
+      const leftIconSlot = slots['left-icon']
+
+      if (props.leftIcon || leftIconSlot) {
+        return (
+          <view
+            class={bem('left-icon')}
+            onTap={props.onClickLeftIcon}
+          >
+            {leftIconSlot ? leftIconSlot() : (
+              <Icon name={props.leftIcon} />
+            )}
+          </view>
+        )
+      }
+    }
+
+    const renderRightIcon = () => {
+      const rightIconSlot = slots['right-icon']
+
+      if (props.rightIcon || rightIconSlot) {
+        return (
+          <view
+            class={bem('right-icon')}
+            onTap={props.onClickRightIcon}
+          >
+            {rightIconSlot ? rightIconSlot() : (
+              <Icon name={props.rightIcon} />
+            )}
+          </view>
+        )
+      }
+    }
+
+    const renderWordLimit = () => {
+      if (props.showWordLimit && props.maxlength) {
+        const count = getStringLength(getModelValue())
+        return (
+          <view class={[bem('word-limit'), props.limitClass]}>
+            <text class={bem('word-num')}>{count}</text>/{props.maxlength}
+          </view>
+        )
+      }
+    }
+
+    const renderMessage = () => {
+      if (form && form.props.showErrorMessage === false) {
+        return
+      }
+
+      const message = props.errorMessage || state.validateMessage
+
+      if (message) {
+        const slot = slots['error-message']
+        const errorMessageAlign = getProp('errorMessageAlign')
+
+        return (
+          <view class={bem('error-message', errorMessageAlign)}>
+            {slot ? slot({ message }) : message}
+          </view>
+        )
+      }
+    }
+
+    const renderTitleWrapper = () => {
+      const colon = getProp('colon') ? ':' : ''
+
+      if (slots.title) {
+        return [slots.title(), colon]
+      }
+
+      if (props.title) {
+        return (
+          <Label
+            id={`${id}-title`}
+            for={getInputId()}
+          >
+            {props.title + colon}
+          </Label>
+        )
+      }
+    }
+
+    const renderFieldBody = () => [
+      <view class={bem('body', { textarea: props.type === 'textarea' })}>
+        {renderInput()}
+        {showClear.value && (
+          <Icon
+            name={props.clearIcon}
+            class={bem('clear')}
+            onTouchStart={onClear}
+          />
+        )}
+        {renderRightIcon()}
+        {slots.button && (
+          <view class={bem('button')}>
+            {slots.button()}
+          </view>
+        )}
+      </view>,
+      renderWordLimit(),
+      renderMessage()
+    ]
+
+    watch(
+      () => props.value,
+      () => {
+        updateValue(getModelValue())
+        resetValidation()
+        validateWithTrigger('onChange')
+        nextTick(adjustTextareaSize)
+      }
+    )
+
+    watch(
+      () => props.autoFocus,
+      (value) => {
+        focused.value = value
+      }
+    )
+
+    provide(FIELD_INJECTION_KEY,{
+      customValue,
+      resetValidation,
+      validateWithTrigger
+    })
+
+    useExpose({
+      blur,
+      focus,
+      validate,
+      formValue,
+      resetValidation,
+      getValidationStatus
+    })
+
+    useLoad(() => {
+      updateValue(getModelValue(), props.formatTrigger)
+      nextTick(() => {
+        if (form && isNil(props.name)) {
+          form.unlink(vm!)
+        }
+        adjustTextareaSize()
+      })
+    })
+
+    return () => {
+      const inset = getProp('inset')
+      const disabled = getProp('disabled')
+      const titleAlign = getProp('titleAlign')
+      const LeftIcon = renderLeftIcon()
+
+      const renderTitle = () => {
+        const Title = renderTitleWrapper()
+
+        if (titleAlign === 'top') {
+          return [LeftIcon, Title].filter(Boolean)
+        }
+        return Title || []
+      }
+
+      return (
+        <Cell
+          {...pick(props, [
+            'size',
+            'center',
+            'border',
+            'isLink',
+            'clickable',
+            'arrowDirection'
+          ])}
+          v-slots={{
+            icon: LeftIcon && titleAlign !== 'top' ? () => LeftIcon : null,
+            title: renderTitle,
+            value: renderFieldBody,
+            extra: slots.extra
+          }}
+          class={bem({
+            disabled,
+            error: showError.value,
+            [`label-${titleAlign}`]: titleAlign
+          })}
+          titleClass={[
+            bem('label', [titleAlign, { required: props.required }]),
+            props.labelClass
+          ]}
+          valueClass={[bem('value'), props.valueClass]}
+          inset={inset}
+          titleStyle={titleStyle.value}
+        />
+      )
+    }
+  }
+})

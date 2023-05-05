@@ -1,0 +1,44 @@
+@layout-cls: ~'@{prefix}-app';
+
+page {
+  --layout-vertical-padding: 36rpx;
+  --layout-horizontal-padding: 36rpx;
+}
+
+.@{layout-cls} {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  box-sizing: border-box;
+
+  &--inset {
+    padding:
+      var(--layout-vertical-padding)
+      var(--layout-horizontal-padding)
+      0;
+  }
+
+  &__container {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  &__loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: inherit;
+    background-color: var(--color-bgcolor, inherit);
+    z-index: 988;
+  }
+
+  &__bottom {
+    height: var(--layout-vertical-padding);
+  }
+}
