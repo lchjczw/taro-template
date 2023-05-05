@@ -438,6 +438,52 @@ export default defineComponent({
 
     const getValidationStatus = () => state.status
 
+    watch(
+      () => props.value,
+      () => {
+        updateValue(getModelValue())
+        resetValidation()
+        validateWithTrigger('onChange')
+        nextTick(adjustTextareaSize)
+      }
+    )
+
+    watch(
+      () => props.autoFocus,
+      (value) => {
+        focused.value = value
+      }
+    )
+
+    provide(FIELD_INJECTION_KEY,{
+      customValue,
+      resetValidation,
+      validateWithTrigger
+    })
+
+    useExpose({
+      blur,
+      focus,
+      validate,
+      formValue,
+      resetValidation,
+      getValidationStatus
+    })
+
+    useLoad(() => {
+      updateValue(
+        getModelValue(),
+        props.formatTrigger
+      )
+
+      nextTick(() => {
+        if (form && isNil(props.name)) {
+          form.unlink(vm!)
+        }
+        adjustTextareaSize()
+      })
+    })
+
     const renderInput = () => {
       const controlClass = bem('control', [
         getProp('inputAlign'),
@@ -634,48 +680,6 @@ export default defineComponent({
       renderWordLimit(),
       renderMessage()
     ]
-
-    watch(
-      () => props.value,
-      () => {
-        updateValue(getModelValue())
-        resetValidation()
-        validateWithTrigger('onChange')
-        nextTick(adjustTextareaSize)
-      }
-    )
-
-    watch(
-      () => props.autoFocus,
-      (value) => {
-        focused.value = value
-      }
-    )
-
-    provide(FIELD_INJECTION_KEY,{
-      customValue,
-      resetValidation,
-      validateWithTrigger
-    })
-
-    useExpose({
-      blur,
-      focus,
-      validate,
-      formValue,
-      resetValidation,
-      getValidationStatus
-    })
-
-    useLoad(() => {
-      updateValue(getModelValue(), props.formatTrigger)
-      nextTick(() => {
-        if (form && isNil(props.name)) {
-          form.unlink(vm!)
-        }
-        adjustTextareaSize()
-      })
-    })
 
     return () => {
       const inset = getProp('inset')
