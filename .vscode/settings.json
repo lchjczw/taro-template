@@ -1,0 +1,11 @@
+{
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.less",
+    "dist/pollen/vars.css"
+  ],
+  "cssVariables.autocompleteInFiles": [
+    "*.css",
+    "*.less"
+  ]
+}

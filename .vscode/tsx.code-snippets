@@ -1,0 +1,57 @@
+{
+  "tsx view": {
+    "scope": "typescriptreact",
+    "prefix": "views",
+    "description": "页面基础片段",
+    "body": [
+      "import { App } from '@/components/app'",
+      "import { Navbar } from '@/components/navbar'",
+      "",
+      "import Bem from '@txjs/bem'",
+      "import { defineComponent } from 'vue'",
+      "",
+      "import less from './index.module.less'",
+      "",
+      "const [name, bem] = Bem('$1', less)",
+      "",
+      "export default defineComponent({",
+      "  name,",
+      "",
+      "  setup() {",
+      "    return () => (",
+      "      <App loading={false}>",
+      "        <Navbar />",
+      "        <App.Body></App.Body>",
+      "      </App>",
+      "    )",
+      "  }",
+      "})"
+    ]
+  },
+  "tsx test": {
+    "scope": "typescriptreact",
+    "prefix": "tests",
+    "description": "测试基础片段",
+    "body": [
+      "import { App } from '@/components/app'",
+      "",
+      "import Bem from '@txjs/bem'",
+      "import { defineComponent } from 'vue'",
+      "",
+      "import less from './index.module.less'",
+      "",
+      "const [name, bem] = Bem('$1', less)",
+      "",
+      "export default defineComponent({",
+      "  name,",
+      "",
+      "  setup() {",
+      "    return () => (",
+      "      <App loading={false}>",
+      "      </App>",
+      "    )",
+      "  }",
+      "})"
+    ]
+  }
+}
