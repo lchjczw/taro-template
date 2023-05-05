@@ -8,10 +8,6 @@ import { defineComponent } from 'vue'
 
 import less from './index.module.less'
 
-definePageConfig({
-  navigationStyle: 'custom'
-})
-
 const [name] = Bem('login', less)
 
 export default defineComponent({
