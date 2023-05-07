@@ -27,6 +27,12 @@ export default defineComponent({
             <Cell title="单元格" value="内容" />
             <Cell title="单元格" label="描述信息" value="内容" />
           </CellGroup>
+          <CellGroup title="收缩单元">
+            <view style={{ padding: '0 32rpx' }}>
+              <Cell shrink={false} title="单元格" value="内容" />
+              <Cell shrink={false} title="单元格" label="描述信息" value="内容" />
+            </view>
+          </CellGroup>
           <CellGroup title="单元格大小">
             <Cell size="large" title="单元格" value="内容" />
             <Cell size="large" title="单元格" label="描述信息" value="内容" />
