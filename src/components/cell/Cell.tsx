@@ -34,7 +34,7 @@ export const cellSharedProps = {
   title: numericProp,
   value: numericProp,
   label: numericProp,
-  inset: truthProp,
+  shrink: truthProp,
   center: Boolean,
   isLink: Boolean,
   border: truthProp,
@@ -65,7 +65,7 @@ export default defineComponent({
   props: callProps,
 
   setup(props, { slots }) {
-    const innerBorder = ref(props.border)
+    const border = ref(props.border)
     const { parent } = useParent(CELL_GROUP_KEY)
 
     const titleWidth = computed(() =>
@@ -88,7 +88,7 @@ export default defineComponent({
     }
 
     const setBorder = (value: boolean) => {
-      innerBorder.value = value
+      border.value = value
     }
 
     const onClick = (event: ITouchEvent) => {
@@ -183,16 +183,15 @@ export default defineComponent({
     }
 
     return () => {
-      const { size, center, inset, isLink, required } = props
-      const border = innerBorder.value
+      const { size, center,  shrink, isLink, required } = props
       const clickable = props.clickable ?? isLink
 
       const classes: Record<string, boolean | undefined> = {
         center,
-        inset,
         required,
         clickable,
-        borderless: !border
+        shrink,
+        borderless: !border.value
       }
 
       if (size) {
