@@ -32,7 +32,7 @@ const formProps = {
   disabled: Boolean,
   readonly: Boolean,
   showError: Boolean,
-  inset: truthProp,
+  shrink: truthProp,
   titleWidth: numericProp,
   scrollToError: Boolean,
   validateFirst: Boolean,

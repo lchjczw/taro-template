@@ -110,7 +110,7 @@ export const fieldSharedProps = {
     message: string
   }) => void>,
   'onUpdate:value': Function as PropType<(value: unknown) => void>,
-  inset: {
+  shrink: {
     type: Boolean,
     default: null
   },
@@ -682,7 +682,7 @@ export default defineComponent({
     ]
 
     return () => {
-      const inset = getProp('inset')
+      const shrink = getProp('shrink')
       const disabled = getProp('disabled')
       const titleAlign = getProp('titleAlign')
       const LeftIcon = renderLeftIcon()
@@ -704,7 +704,8 @@ export default defineComponent({
             'border',
             'isLink',
             'clickable',
-            'arrowDirection'
+            'arrowDirection',
+            'onTap'
           ])}
           v-slots={{
             icon: LeftIcon && titleAlign !== 'top' ? () => LeftIcon : null,
@@ -722,7 +723,7 @@ export default defineComponent({
             props.labelClass
           ]}
           valueClass={[bem('value'), props.valueClass]}
-          inset={inset}
+          shrink={shrink}
           titleStyle={titleStyle.value}
         />
       )

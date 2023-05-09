@@ -29,7 +29,7 @@ export type FieldValidationStatus = 'passed' | 'failed' | 'unvalidated'
 
 export type FieldFormSharedProps =
   | 'colon'
-  | 'inset'
+  | 'shrink'
   | 'disabled'
   | 'readonly'
   | 'titleWidth'
