@@ -1,4 +1,4 @@
-import { isNil, isNumberic } from '@txjs/bool'
+import { isNil, isNumeric } from '@txjs/bool'
 
 /**
  * 字符串驼峰式
@@ -31,7 +31,7 @@ export function addUnit(value?: Numeric, multiple = 1) {
     return
   }
 
-  if (isNumberic(value)) {
+  if (isNumeric(value)) {
     return `${value * multiple}${process.env.PIXEL}`
   }
 
