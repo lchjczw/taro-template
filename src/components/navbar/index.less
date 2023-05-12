@@ -29,6 +29,35 @@ page {
     .hairline-bottom();
   }
 
+  &--center {
+    .@{navbar-cls} {
+      &__left {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      &__title {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+
+  &--left {
+    .@{navbar-cls} {
+      &__wrapper {
+        display: flex;
+        align-items: center;
+      }
+
+      &__title--noLeft {
+        margin-left: var(--size-lg);
+      }
+    }
+  }
+
   &__placeholder {
     position: absolute;
     top: 0;
@@ -44,10 +73,7 @@ page {
   }
 
   &__left {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
+    height: 100%;
     display: flex;
     align-items: center;
     font-size: var(--size-md);
@@ -64,7 +90,6 @@ page {
 
   &__title {
     max-width: 50%;
-    margin: 0 auto;
     color: var(--navbar-title-text-color);
     font-weight: var(--weight-bold);
     font-size: var(--navbar-title-font-size);

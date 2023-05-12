@@ -1,4 +1,4 @@
-import type { NavbarTitleColor } from './types'
+import type { NavbarPosition, NavbarTitleColor } from './types'
 
 import { APP_GLOBAL_KEY } from '../app/App'
 import { Icon } from '../icon'
@@ -59,7 +59,9 @@ const navbarProps = {
   scrollTransition: Boolean,
   transposeColor: Boolean,
   safeAreaInsetTop: truthProp,
+  leftArrowNoPaddingLeft: Boolean,
   zIndex: makeNumericProp(999),
+  position: makeStringProp<NavbarPosition>('center'),
   background: makeStringProp('#ffffff'),
   backBefore: Function as PropType<Interceptor>,
   title: [String, Function] as PropType<string | VueSlotVNode>,
@@ -110,6 +112,14 @@ export default defineComponent({
       const style = getZIndexStyle(props.zIndex) as CSSProperties
       if (props.safeAreaInsetTop) {
         style.paddingTop = addUnit(statusBarHeight, 2)
+      }
+      return style
+    })
+
+    const leftStyle = computed(() => {
+      const style = {} as CSSProperties
+      if (props.leftArrowNoPaddingLeft) {
+        style.paddingLeft = '0rpx'
       }
       return style
     })
@@ -182,7 +192,10 @@ export default defineComponent({
 
       if (left) {
         return (
-          <view class={[bem('left'), props.leftClass]}>
+          <view
+            class={[bem('left'), props.leftClass]}
+            style={leftStyle.value}
+          >
             {slots.left?.() || state.leftArrowVisible && (
               <Icon
                 size={40}
@@ -211,12 +224,13 @@ export default defineComponent({
     }
 
     const renderTitle = () => {
+      const left = slots.left || state.leftArrowVisible
       const title = slots.default || titleText.value
 
       if (title) {
         return (
           <view
-            class={[bem('title'), props.titleClass]}
+            class={[bem('title', { 'noLeft': !left }), props.titleClass]}
             style={{ color: state.color }}
           >
             {slots.default?.() || renderTitleText(titleText.value)}
@@ -239,7 +253,8 @@ export default defineComponent({
         id={id}
         class={bem({
           fixed: props.fixed,
-          border: props.border
+          border: props.border,
+          [props.position]: true
         })}
         style={navbarStyle.value}
         onTouchMove={noop}
