@@ -92,5 +92,13 @@
     "launchMode": "default",
     "scene": null,
     "env": ["development"]
+  },
+  {
+    "title": "navbar-示例",
+    "page": "examples/navbar/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
   }
 ]
