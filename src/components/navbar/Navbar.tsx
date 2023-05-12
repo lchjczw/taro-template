@@ -100,6 +100,10 @@ export default defineComponent({
       leftArrowVisible: !app?.hasTabbar && (history || props.showHomeIcon)
     })
 
+    const showLeft = computed(() =>
+      !!slots.left || state.leftArrowVisible
+    )
+
     const background = computed(() =>
       app?.navbarOptions.background || props.background
     )
@@ -188,9 +192,7 @@ export default defineComponent({
     useLoad(getRootHeight)
 
     const renderLeftIcon = () => {
-      const left = slots.left || state.leftArrowVisible
-
-      if (left) {
+      if (showLeft.value) {
         return (
           <view
             class={[bem('left'), props.leftClass]}
@@ -224,13 +226,12 @@ export default defineComponent({
     }
 
     const renderTitle = () => {
-      const left = slots.left || state.leftArrowVisible
       const title = slots.default || titleText.value
 
       if (title) {
         return (
           <view
-            class={[bem('title', { 'noLeft': !left }), props.titleClass]}
+            class={[bem('title', { 'noLeft': !showLeft.value && !props.leftArrowNoPaddingLeft }), props.titleClass]}
             style={{ color: state.color }}
           >
             {slots.default?.() || renderTitleText(titleText.value)}
