@@ -37,7 +37,8 @@ if (process.env.NODE_ENV === 'development') {
       'keyboard/index',
       'h5/index',
       'result/index',
-      'form/index'
+      'form/index',
+      'navbar/index'
     ]
   })
 }
