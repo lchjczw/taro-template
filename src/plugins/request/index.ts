@@ -64,6 +64,12 @@ REQUEST.Defaults.transformResponse = (config) => {
   return Promise.reject(data)
 }
 
+REQUEST.Listeners.onRejected.push((res) => {
+  if (res.errMsg.startsWith('request:fail')) {
+    toast.show('请求错误，稍后再试')
+  }
+})
+
 const cleanUndef = <T extends BaseData>(data?: T) => {
   if (isPlainObject(data)) {
     Object.keys(data).forEach((key) => {
