@@ -38,7 +38,8 @@ if (process.env.NODE_ENV === 'development') {
       'h5/index',
       'result/index',
       'form/index',
-      'navbar/index'
+      'navbar/index',
+      'alert/index'
     ]
   })
 }

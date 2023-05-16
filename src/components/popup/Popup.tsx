@@ -178,15 +178,15 @@ export default defineComponent({
 
     const renderTransition = () => {
       const { position, transition, transitionAppear } = props
-      const name = position === 'center' ? 'fade' : `${process.env.PREFIX}-popup-slide-${position}`
+      const transitionName = position === 'center' ? 'popup-fade' : `${name}-slide-${position}`
 
       return (
         <Transition
-          v-slots={{ default: renderPopup }}
-          name={transition || name}
+          name={transition || transitionName}
           appear={transitionAppear}
           onAfterEnter={onOpened}
           onAfterLeave={onClosed}
+          v-slots={{ default: renderPopup }}
         />
       )
     }

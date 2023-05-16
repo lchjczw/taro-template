@@ -231,7 +231,7 @@ export default defineComponent({
       if (title) {
         return (
           <view
-            class={[bem('title', { 'noLeft': !showLeft.value && !props.leftArrowNoPaddingLeft }), props.titleClass]}
+            class={[bem('title', { 'no-left': !showLeft.value && !props.leftArrowNoPaddingLeft }), props.titleClass]}
             style={{ color: state.color }}
           >
             {slots.default?.() || renderTitleText(titleText.value)}

@@ -104,7 +104,14 @@ export default defineComponent({
     }
 
     return () => {
-      const children = filterEmpty(slots.default?.())
+      const children = slots.default?.()
+      const items = filterEmpty(children)
+      const len = items.length
+
+      if (len === 0) {
+        return
+      }
+
       return (
         <view
           class={[
@@ -116,11 +123,11 @@ export default defineComponent({
             })
           ]}
         >
-          {children.map((item, index) => (
+          {items.map((item, index) => (
             <view
               key={`item-${index}`}
               class={bem('item')}
-              style={getMarginStyle(index === children.length - 1)}
+              style={getMarginStyle(index === len - 1)}
             >{item}</view>
           ))}
         </view>

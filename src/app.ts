@@ -1,4 +1,5 @@
 import '../dist/pollen/vars.css'
+import '@/components/styles/index.less'
 import '@/styles/normalize.less'
 import '@/styles/ellipsis.less'
 import '@/styles/hairline.less'

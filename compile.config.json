@@ -100,5 +100,13 @@
     "launchMode": "default",
     "scene": null,
     "env": ["development"]
+  },
+  {
+    "title": "alert-示例",
+    "page": "examples/alert/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
   }
 ]
