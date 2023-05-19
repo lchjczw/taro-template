@@ -297,11 +297,12 @@ export default defineComponent({
       state.validateMessage = ''
     }
 
-    const endValidate = () =>
+    const endValidate = () => {
       props.onEndValidate?.({
         status: state.status,
         message: state.validateMessage
       })
+    }
 
     const validate = (rules = getRules()) =>
       new Promise<FieldValidateError | void>((resolve) => {
@@ -546,9 +547,7 @@ export default defineComponent({
         }
 
         if (process.env.TARO_ENV === 'weapp') {
-          extend(textareaProps, {
-            disableDefaultPadding: true
-          })
+          extend(textareaProps, { disableDefaultPadding: true })
         } else if (process.env.TARO_ENV === 'alipay') {
           inputAttrs.maxlength = -1
         }
