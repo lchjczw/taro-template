@@ -1,7 +1,7 @@
 import { SafeArea } from '../safa-area'
 
 import Bem from '@txjs/bem'
-import { defineComponent, ref, onBeforeUnmount } from 'vue'
+import { defineComponent, ref, onUnmounted } from 'vue'
 import { useLoad } from '@tarojs/taro'
 import { getRect, nextTick } from '@/utils'
 import { useId } from '../composables'
@@ -47,7 +47,12 @@ export default defineComponent({
       })
     })
 
-    onBeforeUnmount(observer.disconnect)
+    onUnmounted(() => {
+      if (observer) {
+        observer.takeRecords()
+        observer.disconnect()
+      }
+    })
 
     return () => (
       <>
