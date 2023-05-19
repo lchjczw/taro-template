@@ -1,7 +1,7 @@
 import { SafeArea } from '../safa-area'
 
 import Bem from '@txjs/bem'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onBeforeUnmount } from 'vue'
 import { useLoad } from '@tarojs/taro'
 import { getRect, nextTick } from '@/utils'
 import { useId } from '../composables'
@@ -36,7 +36,18 @@ export default defineComponent({
       })
     }
 
-    useLoad(updateHeight)
+    const observer = new MutationObserver(updateHeight)
+
+    useLoad(() => {
+      updateHeight()
+      nextTick(() => {
+        observer.observe(document.getElementById(id)!, {
+          childList: true
+        })
+      })
+    })
+
+    onBeforeUnmount(observer.disconnect)
 
     return () => (
       <>
