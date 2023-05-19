@@ -2,7 +2,6 @@ import { App } from '@/components/app'
 import { CellGroup, Cell } from '@/components/cell'
 import { Form, Field } from '@/components/form'
 import { Button } from '@/components/button'
-import { Icon } from '@/components/icon'
 
 import Bem from '@txjs/bem'
 import { defineComponent, reactive } from 'vue'
@@ -81,9 +80,7 @@ export default defineComponent({
                 placeholder="请输入密码"
                 password={formModel.eye}
                 rightIcon={formModel.eye ? 'closed-eye' : 'eye-o'}
-                onClickRightIcon={() => {
-                  formModel.eye = !formModel.eye
-                }}
+                onClickRightIcon={() => formModel.eye = !formModel.eye}
               />
               <Field
                 v-model:value={formModel.addr}
