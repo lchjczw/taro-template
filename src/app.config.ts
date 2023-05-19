@@ -39,7 +39,8 @@ if (process.env.NODE_ENV === 'development') {
       'result/index',
       'form/index',
       'navbar/index',
-      'alert/index'
+      'alert/index',
+      'list/index'
     ]
   })
 }

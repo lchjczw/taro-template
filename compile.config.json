@@ -108,5 +108,13 @@
     "launchMode": "default",
     "scene": null,
     "env": ["development"]
+  },
+  {
+    "title": "list-示例",
+    "page": "examples/list/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
   }
 ]
