@@ -8,7 +8,7 @@ export const getCurrentToken = () => {
     )
 
     if (value == '') {
-      throw new Error('token is empty')
+      throw new Error('stores:user token is empty')
     }
 
     return value as string
@@ -20,11 +20,11 @@ export const getCurrentToken = () => {
 export const getUserProfile = () => {
   try {
     const value = getStorageSync(
-      USERS_ENUM.USER_IFNO
+      USERS_ENUM.USER_INFO
     )
 
     if (value == '') {
-      throw new Error('user profile is empty')
+      throw new Error('stores:user user profile is empty')
     }
 
     return value as UserInfo
