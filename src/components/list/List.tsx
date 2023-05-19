@@ -80,7 +80,7 @@ export default defineComponent({
 
         selector.exec(([{ bottom = 0 }] = []) => {
           // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
-          if (cilentHeight + scrollTop.value >= bottom - +props.offset) {
+          if ((cilentHeight + scrollTop.value >= bottom - +props.offset) && !loading.value) {
             loading.value = true
             emit('update:loading', true)
             props.onLoad?.()
@@ -148,11 +148,7 @@ export default defineComponent({
     }
 
     watch(
-      [
-        () => props.loading,
-        () => props.finished,
-        () => props.error
-      ],
+      () => [props.loading, props.finished, props.error],
       check
     )
 
