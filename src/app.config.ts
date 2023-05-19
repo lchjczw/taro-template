@@ -8,7 +8,7 @@ const config = {
     navigationStyle: 'custom',
     navigationBarTextStyle: 'black',
     navigationBarBackgroundColor: '#ffffff',
-    backgroundColor: process.env.BACKGROUND_LIGHT_COLOR,
+    backgroundColor: process.env.COLOR_BGCOLOR,
     navigationBarTitleText: process.env.PROJECT_NAME
   },
   useExtendedLib: {
