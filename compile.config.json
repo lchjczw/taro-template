@@ -116,5 +116,13 @@
     "launchMode": "default",
     "scene": null,
     "env": ["development"]
+  },
+  {
+    "title": "footer-bar-示例",
+    "page": "examples/footer-bar/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
   }
 ]

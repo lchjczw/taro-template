@@ -40,7 +40,8 @@ if (process.env.NODE_ENV === 'development') {
       'form/index',
       'navbar/index',
       'alert/index',
-      'list/index'
+      'list/index',
+      'footer-bar/index'
     ]
   })
 }
