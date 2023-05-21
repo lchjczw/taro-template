@@ -1,6 +1,7 @@
 const shell = require('shelljs')
 const minimist = require('minimist')
 const bool = require('@txjs/bool')
+const pkg = require('../../package.json')
 const utils = require('../utils')
 
 const getProfileName = (taroName) => {
@@ -10,6 +11,17 @@ const getProfileName = (taroName) => {
       return 'project.config.json'
     case 'alipay':
       return 'mini.project.json'
+  }
+}
+
+const setProjectName = (config, taroName) => {
+  switch (taroName) {
+    case 'tt':
+    case 'weapp':
+      if (!Reflect.has(config, 'projectname')) {
+        Reflect.set(config, 'projectname', pkg.name)
+      }
+      break
   }
 }
 
@@ -65,6 +77,8 @@ module.exports = (ctx, options = {}) => {
     if (Reflect.has(options, ciArgs.type)) {
       Object.assign(config, Reflect.get(options, ciArgs.type))
     }
+
+    Object.assign(config, setProjectName(config, ciArgs.type))
 
     // 缓存配置
     if (shell.test('-e', outputPath)) {
