@@ -56,13 +56,13 @@ page {
     box-sizing: border-box;
     cursor: pointer;
 
-    .@{prefix}-icon {
-      color: currentColor;
-      font-size: 0.7em;
-
-      &:before {
-        vertical-align: -1rpx;
-      }
+    &-check {
+      width: 0.7em;
+      height: 0.7em;
+      mask-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDQ4IDQ4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMCAyNEwyMCAzNEw0MCAxNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==);
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      background-color: currentColor;
     }
 
     &--round {

@@ -1,7 +1,5 @@
 import type { ITouchEvent } from '@tarojs/components'
 
-import { Icon } from '../icon'
-
 import extend from 'extend'
 import { addUnit } from '@/utils'
 
@@ -102,7 +100,7 @@ export default defineComponent({
             checked,
             disabled: disabled.value
           }) : (
-            <Icon name="success" />
+            <view class={bem('icon-check')} />
           )}
         </view>
       )
