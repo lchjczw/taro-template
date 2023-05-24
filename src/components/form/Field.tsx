@@ -174,7 +174,7 @@ export default defineComponent({
     const vm = getCurrentInstance()
     const { parent: form } = useParent(FORM_KEY)
 
-    const hasInputOrTextarea = computed(() =>
+    const noInputOrTextarea = computed(() =>
       !!(slots.input ?? slots.default)
     )
 
@@ -191,7 +191,7 @@ export default defineComponent({
     })
 
     const formValue = computed(() => {
-      if (customValue.value && hasInputOrTextarea.value) {
+      if (customValue.value && noInputOrTextarea.value) {
         return customValue.value()
       }
       return props.value
@@ -467,7 +467,7 @@ export default defineComponent({
         .filter(Boolean)
         .join(' ')
 
-      if (hasInputOrTextarea.value) {
+      if (noInputOrTextarea.value) {
         return (
           <view
             class={controlClass}
