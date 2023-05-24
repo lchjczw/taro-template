@@ -76,10 +76,11 @@ export default defineComponent({
           return 'info'
         case 'success':
           return 'checked'
-        case 'warning':
-          return 'warning'
         case 'error':
           return 'clear'
+        case 'warning':
+        default:
+          return 'warning'
       }
     })
 
