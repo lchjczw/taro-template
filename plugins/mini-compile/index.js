@@ -10,9 +10,7 @@ const config = {
 const formatCompileMode = (taroEnv, modes) => {
   switch (taroEnv) {
     case 'alipay':
-      return {
-        modes
-      }
+      return { modes }
     case 'tt':
     case 'weapp':
       return {
