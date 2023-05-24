@@ -52,6 +52,7 @@ export default defineComponent({
         <App.Body>
           <Form
             rules={formRules}
+            requiredAlign="right"
           >
             <CellGroup
               inset
