@@ -95,7 +95,7 @@ const transformRequestConfig = <
   }
 
   if (usersStore.hasLogged) {
-    config.headers!['Authorization'] = `Bearer ${usersStore.user_token}`
+    config.headers!['Authorization'] = `Bearer ${usersStore.userToken}`
   }
 
   return config!
