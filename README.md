@@ -17,6 +17,17 @@
     - .env 小程序环境配置
     - .env.[mode] 指定开发环境下小程序环境配置
 
+运行命令
+
+```ts
+// 运行test环境
+npm run dev:weapp -- --mode test
+```
+
+> 运行命令说明配置
+>
+> 在项目根目录添加指定环境文件，例如：`.env.test` 测试环境，在运行 `npm run dev:weapp -- --mode test` 命令时会自动覆盖默认环境配置
+
 ## `public` 目录结构
 
 ```js
@@ -43,8 +54,19 @@ public
     └── .env.[mode]
 ``` 
 
-
 ## 插件支持
+
+### `vue-devtools` 开发调试工具
+
+> 只支持 `weapp` 小程序环境
+
+运行命令
+
+```ts
+npm run dev:weapp -- --debug
+```
+
+---
 
 ### `mini-ci` 自动化上传小程序包插件
 
@@ -139,3 +161,15 @@ interface compileConfigItem {
 ### `mini-copy` 拷贝文件到打包目录
 
 该插件会在项目构建完成后，自动拷贝 `public` 指定小程序目录下 `assets` 文件夹拷贝到项目打包根目录，假如：打包目录在 `dist/weapp`，则至 `dist/weapp/..`
+
+---
+
+### `mockjs`
+
+在项目根目录 `mock` 文件夹配置接口方法
+
+运行命令
+
+```ts
+npm run dev:weapp -- --mock
+```
