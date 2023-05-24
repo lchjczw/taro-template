@@ -1,6 +1,7 @@
 import type {
   FormProvide,
   FieldTextAlign,
+  FieldRequiredAlign,
   FieldValidateError,
   FieldValidateTrigger,
   FieldValidationStatus
@@ -40,6 +41,7 @@ const formProps = {
   rules: Object as PropType<Record<string, ValidatorRules>>,
   titleAlign: String as PropType<FieldTextAlign>,
   inputAlign: String as PropType<FieldTextAlign>,
+  requiredAlign: String as PropType<FieldRequiredAlign>,
   errorMessageAlign: String as PropType<FieldTextAlign>,
   onReset: Function as PropType<() => void>,
   onFinish: Function as PropType<(values: Record<string, unknown>) => void>,

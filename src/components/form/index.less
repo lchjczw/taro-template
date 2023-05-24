@@ -50,10 +50,18 @@ page {
       margin-bottom: var(--size-1);
     }
 
-    &--required:before {
-      margin-right: 2px;
+    &--required-left:before,
+    &--required-right:after {
       color: var(--field-required-mark-color);
       content: '*';
+    }
+
+    &--required-left:before {
+      margin-right: 4rpx;
+    }
+
+    &--required-right:after {
+      margin-left: 4rpx;
     }
   }
 

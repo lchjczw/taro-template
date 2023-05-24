@@ -2,6 +2,7 @@ import type {
   FieldType,
   FieldRule,
   FieldTextAlign,
+  FieldRequiredAlign,
   FieldValidateError,
   FieldClearTrigger,
   FieldFormatTrigger,
@@ -92,6 +93,7 @@ export const fieldSharedProps = {
   leftIcon: String as PropType<IconName>,
   rightIcon: String as PropType<IconName>,
   formatter: Function as PropType<(value: string) => string>,
+  requiredAlign: String as PropType<FieldRequiredAlign>,
   clearIcon: makeStringProp<IconName>('clear'),
   clearTrigger: makeStringProp<FieldClearTrigger>('focus'),
   formatTrigger: makeStringProp<FieldFormatTrigger>('onChange'),
@@ -228,6 +230,14 @@ export default defineComponent({
       }
 
       return {}
+    })
+
+    const requiredAlign = computed(() => {
+      if (!props.required) {
+        return
+      }
+
+      return `required-${getProp('requiredAlign') || 'left'}`
     })
 
     const getModelValue = () =>  String(props.value) || ''
@@ -439,52 +449,6 @@ export default defineComponent({
 
     const getValidationStatus = () => state.status
 
-    watch(
-      () => props.value,
-      () => {
-        updateValue(getModelValue())
-        resetValidation()
-        validateWithTrigger('onChange')
-        nextTick(adjustTextareaSize)
-      }
-    )
-
-    watch(
-      () => props.autoFocus,
-      (value) => {
-        focused.value = value
-      }
-    )
-
-    provide(FIELD_INJECTION_KEY,{
-      customValue,
-      resetValidation,
-      validateWithTrigger
-    })
-
-    useExpose({
-      blur,
-      focus,
-      validate,
-      formValue,
-      resetValidation,
-      getValidationStatus
-    })
-
-    useLoad(() => {
-      updateValue(
-        getModelValue(),
-        props.formatTrigger
-      )
-
-      nextTick(() => {
-        if (form && isNil(props.name)) {
-          form.unlink(vm!)
-        }
-        adjustTextareaSize()
-      })
-    })
-
     const renderInput = () => {
       const controlClass = bem('control', [
         getProp('inputAlign'),
@@ -680,6 +644,52 @@ export default defineComponent({
       renderMessage()
     ]
 
+    watch(
+      () => props.value,
+      () => {
+        updateValue(getModelValue())
+        resetValidation()
+        validateWithTrigger('onChange')
+        nextTick(adjustTextareaSize)
+      }
+    )
+
+    watch(
+      () => props.autoFocus,
+      (value) => {
+        focused.value = value
+      }
+    )
+
+    provide(FIELD_INJECTION_KEY,{
+      customValue,
+      resetValidation,
+      validateWithTrigger
+    })
+
+    useExpose({
+      blur,
+      focus,
+      validate,
+      formValue,
+      resetValidation,
+      getValidationStatus
+    })
+
+    useLoad(() => {
+      updateValue(
+        getModelValue(),
+        props.formatTrigger
+      )
+
+      nextTick(() => {
+        if (form && isNil(props.name)) {
+          form.unlink(vm!)
+        }
+        adjustTextareaSize()
+      })
+    })
+
     return () => {
       const shrink = getProp('shrink')
       const disabled = getProp('disabled')
@@ -718,7 +728,7 @@ export default defineComponent({
             [`label-${titleAlign}`]: titleAlign
           })}
           titleClass={[
-            bem('label', [titleAlign, { required: props.required }]),
+            bem('label', [titleAlign, requiredAlign.value]),
             props.labelClass
           ]}
           valueClass={[bem('value'), props.valueClass]}

@@ -17,6 +17,8 @@ export type FieldType =
   | 'textarea'
   | 'password'
 
+export type FieldRequiredAlign = 'left' | 'right'
+
 export type FieldTextAlign = 'left' | 'center' | 'right' | 'top'
 
 export type FieldClearTrigger = 'always' | 'focus'
@@ -35,6 +37,7 @@ export type FieldFormSharedProps =
   | 'titleWidth'
   | 'titleAlign'
   | 'inputAlign'
+  | 'requiredAlign'
   | 'errorMessageAlign'
 
 export type FieldAutosizeConfig = {
