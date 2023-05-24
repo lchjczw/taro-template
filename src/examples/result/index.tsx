@@ -19,7 +19,7 @@ export default defineComponent({
     return () => (
       <App loading={false}>
         <App.Body>
-          <Result />
+          <Result status="500" />
           <Result status="404" />
           <Result status="error" />
           <Result status="network" />
