@@ -5,11 +5,14 @@ page {
   --cascader-background-color: var(--color-white);
   --cascader-title-color: var(--color-text);
   --cascader-title-font-size: var(--size-lg);
-  --cascader-title-line-height: var(--size-12);
+  --cascader-title-height: var(--size-12);
+  --cascader-close-color: var(--color-text-light);
+  --cascader-close-font-size: var(--size-xl);
+  --cascader-close-padding: 0 var(--padding-lg);
   --cascader-steps-horizontal-padding: var(--padding-md);
   --cascader-step-height: 88rpx;
   --cascader-step-dot-size: var(--size-2);
-  --cascader-step-arrow-color: var(--color-grey-600);
+  --cascader-step-arrow-color: var(--color-grey-500);
   --cascader-options-title-color: var(--color-text-light);
   --cascader-options-height: 640rpx;
   --cascader-option-font-size: var(--size-lg);
@@ -22,27 +25,19 @@ page {
   background-color: var(--cascader-background-color);
   color: var(--cascader-title-color);
 
-  &__popup {
-    --popup-close-icon-color: var(--cascader-title-color);
-    --popup-close-icon-size: 40rpx;
-
-    .@{prefix}-popup__close-icon--top-right {
-      top: 28rpx;
-    }
-  }
-
   &__title {
     position: relative;
     font-size: var(--cascader-title-font-size);
     font-weight: var(--weight-bold);
     text-align: center;
-    height: var(--cascader-title-line-height);
-    line-height: var(--cascader-title-line-height);
+    height: var(--cascader-title-height);
+    line-height: var(--cascader-title-height);
   }
 
   &__content {
     width: 100%;
-    flex: 1;
+    flex: 1 auto;
+    min-height: 0;
     display: flex;
     flex-direction: column;
   }
@@ -108,7 +103,7 @@ page {
     height: var(--cascader-options-height);
 
     &-title {
-      margin-top: 40rpx;
+      margin-top: var(--size-5);
       color: var(--cascader-options-title-color);
       font-size: var(--size-md);
       line-height: var(--line-md);
@@ -145,5 +140,18 @@ page {
   &__selected-icon {
     color: var(--cascader-active-color);
     margin-left: auto;
+  }
+
+  .@{prefix}-popup__close-icon {
+    top: 0;
+    right: 0;
+    color: var(--cascader-close-color);
+    font-size: var(--cascader-close-font-size);
+    padding: var(--cascader-close-padding);
+    line-height: var(--cascader-title-height);
+
+    &:active {
+      opacity: var(--opacity-active);
+    }
   }
 }

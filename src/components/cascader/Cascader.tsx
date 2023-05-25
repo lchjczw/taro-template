@@ -36,6 +36,9 @@ import {
 const cascaderProps = extend({}, popupSharedProps, {
   title: String,
   value: numericProp,
+  round: truthProp,
+  closeable: truthProp,
+  closeOnPopstate: truthProp,
   safeAreaInsetBottom: truthProp,
   subTitles: Array as PropType<string[]>,
   options: makeArrayProp<CascaderOption>(),
@@ -59,6 +62,8 @@ const DefaultOptionLabel = '选择选项'
 
 const popupPropsKeys = [
   ...popupSharedPropKeys,
+  'round',
+  'closeable',
   'safeAreaInsetBottom'
 ] as const
 
@@ -229,17 +234,115 @@ export default defineComponent({
       const { options, selected } = tabs.value[activeTab.value]
 
       if (selected) {
-        taroNextTick(() => {
-          getRect(`.${menuId}`)
-            .then((rect) => {
-              if (rect) {
-                const eachRadioHeight = rect.height / options.length
-                scrollTopList.value[activeTab.value] = eachRadioHeight * options.findIndex((option) => option[valueKey] === selected[valueKey])
-              }
-            })
+        taroNextTick(async () => {
+          const rect = await getRect(`.${menuId}`)
+
+          if (rect) {
+            const eachRadioHeight = rect.height / options.length
+            scrollTopList.value[activeTab.value] = eachRadioHeight * options.findIndex((option) => option[valueKey] === selected[valueKey])
+          }
         })
       }
     }
+
+    const renderTitle = () => {
+      if (slots.title || props.title) {
+        return (
+          <view class={bem('title')}>
+            {slots.title ? slots.title() : props.title}
+          </view>
+        )
+      }
+    }
+
+    const renderTab = (tab: CascaderTab, index: number) => {
+      const { selected } = tab
+      const title = selected ? selected[textKey] : DefaultOptionLabel
+      const active = !!selected
+      const last = tabs.value.length - 1 === index
+
+      return (
+        <view
+          class={bem('tab')}
+          onTap={() => onClickTab(index)}
+        >
+          <view class={bem('tab-dot', { active, last })} />
+          <view class={bem('tab-label', { active: index === activeTab.value })}>
+            <text>{title}</text>
+          </view>
+          <Icon
+            name="arrow"
+            size={32}
+            class={bem('tab-arrow')}
+          />
+        </view>
+      )
+    }
+
+    const renderOptionsTitle = () => {
+      if (props.subTitles && props.subTitles[activeTab.value]) {
+        return (
+          <view class={bem('options-title')}>
+            {props.subTitles[activeTab.value]}
+          </view>
+        )
+      }
+    }
+
+    const renderOption = (
+      option: CascaderOption,
+      selectedOption: CascaderOption | null,
+      tabIndex: number
+    ) => {
+      const { disabled } = option
+      const selected = !!(
+        selectedOption && option[valueKey] === selectedOption[valueKey]
+      )
+
+      return (
+        <view
+          key={option[valueKey]}
+          role="menuitemradio"
+          class={[bem('option', { selected, disabled }), option.className]}
+          aria-checked={selected}
+          aria-disabled={disabled || undefined}
+          onTap={() => onSelect(option, tabIndex)}
+        >
+          {slots.option ? slots.option({ option, selected }): (
+            <text>{option[textKey]}</text>
+          )}
+          {selected && (
+            <Icon
+              name="success"
+              size={40}
+              class={bem('selected-icon')}
+            />
+          )}
+        </view>
+      )
+    }
+
+    const renderOptions = (
+      options: CascaderOption[],
+      selectedOption: CascaderOption | null,
+      tabIndex: number
+    ) => (
+      <ScrollView
+        scrollY
+        enhanced
+        pagingEnabled
+        showScrollbar={false}
+        scrollTop={tabIndex === activeTab.value ? scrollTopList.value[tabIndex] : 0}
+        class={bem('options')}
+      >
+        <view
+          role="menu"
+          class={tabIndex === activeTab.value ? menuId : undefined}
+        >
+          {options.map((option) => renderOption(option, selectedOption, tabIndex))}
+        </view>
+      </ScrollView>
+    )
 
     watch(
       () => props.options,
@@ -272,145 +375,27 @@ export default defineComponent({
       }
     )
 
-    const renderTitle = () => (
-      <view class={bem('title')}>
-        {slots.title?.() || <text>{props.title}</text>}
-      </view>
-    )
-
-    const renderTab = (
-      tab: CascaderTab,
-      tabIndex: number
-    ) => {
-      const { selected } = tab
-      const title = selected ? selected[textKey] : DefaultOptionLabel
-      const active = !!selected
-      const last = tabs.value.length - 1 === tabIndex
-
-      return (
-        <view
-          class={bem('tab')}
-          onTap={() => onClickTab(tabIndex)}
-        >
-          <view class={bem('tab-dot', { active, last })} />
-          <view class={bem('tab-label', { active: tabIndex === activeTab.value })}>
-            <text>{title}</text>
-          </view>
-          <Icon
-            name="arrow"
-            size={32}
-            class={bem('tab-arrow')}
-          />
-        </view>
-      )
-    }
-
-    const renderTabs = () => (
-      <view class={[bem('tabs'), 'hairline--bottom']}>
-        {tabs.value.map(renderTab)}
-      </view>
-    )
-
-    const renderOptionsTitle = () => {
-      if (props.subTitles && props.subTitles[activeTab.value]) {
-        return (
-          <view class={bem('options-title')}>
-            {props.subTitles[activeTab.value]}
-          </view>
-        )
-      }
-    }
-
-    const renderOption = (
-      option: CascaderOption,
-      selectedOption: CascaderOption | null,
-      tabIndex: number
-    ) => {
-      const { disabled } = option
-      const selected = !!(
-        selectedOption && option[valueKey] === selectedOption[valueKey]
-      )
-
-      const text = slots.option ? (
-        slots.option({ option, selected })
-      ) : (
-        <text>{option[textKey]}</text>
-      )
-
-      return (
-        <view
-          key={option[valueKey]}
-          role="menuitemradio"
-          class={[bem('option', { selected, disabled }), option.className]}
-          aria-checked={selected}
-          aria-disabled={disabled || undefined}
-          onTap={() => onSelect(option, tabIndex)}
-        >
-          {text}
-          {selected && (
-            <Icon
-              name="success"
-              size={40}
-              class={bem('selected-icon')}
-            />
-          )}
-        </view>
-      )
-    }
-
-    const renderOptions = (
-      options: CascaderOption[],
-      selectedOption: CascaderOption | null,
-      tabIndex: number
-    ) => (
-      <ScrollView
-        scrollY
-        enhanced
-        pagingEnabled
-        showScrollbar={false}
-        scrollTop={tabIndex === activeTab.value ? scrollTopList.value[tabIndex] : 0}
-        class={bem('options')}
-      >
-        <view
-          role="menu"
-          class={tabIndex === activeTab.value ? menuId : undefined}
-        >
-          {options.map((option) =>
-            renderOption(option, selectedOption, tabIndex)
-          )}
-        </view>
-      </ScrollView>
-    )
-
-    const renderOptionsContainer = () => (
-      <view
-        class={bem('options-container')}
-        style={{
-          width: `${tabs.value.length + 1}00vw`,
-          transform: `translateX(-${activeTab.value}00vw)`
-        }}
-      >
-        {tabs.value.map(({ options, selected }: CascaderTab, tabIndex) =>
-          renderOptions(options, selected, tabIndex)
-        )}
-      </view>
-    )
-
     return () => (
       <Popup
-        {...pick(props, popupPropsKeys)}
-        round
-        closeable
+        class={bem()}
         position="bottom"
-        class={bem('popup')}
         onUpdate:show={props['onUpdate:show'] || updateShow}
+        {...pick(props, popupPropsKeys)}
       >
-        <view class={bem()}>
-          {renderTitle()}
-          <view class={bem('content')}>
-            {renderTabs()}
-            {renderOptionsTitle()}
-            {renderOptionsContainer()}
+        {renderTitle()}
+        <view class={bem('content')}>
+          <view class={[bem('tabs'), 'hairline--bottom']}>
+            {tabs.value.map(renderTab)}
+          </view>
+          {renderOptionsTitle()}
+          <view
+            class={bem('options-container')}
+            style={{
+              width: `${tabs.value.length + 1}00vw`,
+              transform: `translateX(-${activeTab.value}00vw)`
+            }}
+          >
+            {tabs.value.map(({ options, selected }: CascaderTab, tabIndex) => renderOptions(options, selected, tabIndex))}
           </view>
         </view>
       </Popup>
