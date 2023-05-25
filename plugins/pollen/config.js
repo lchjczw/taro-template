@@ -43,7 +43,7 @@ module.exports = defineConfig((pollen) => {
     ...pollen.color,
     white: '#fff',
     black: '#000',
-    active: 'var(--color-grey-200)',
+    active: 'var(--color-grey-300)',
     'grey-100': process.env.COLOR_GREY_100,
     'grey-200': process.env.COLOR_GREY_200,
     'grey-300': process.env.COLOR_GREY_300,
