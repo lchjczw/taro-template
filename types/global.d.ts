@@ -16,8 +16,6 @@ declare type Numeric = number | string
 
 declare type ReturnTypePromise<T extends Promise<any>> = T extends Promise<infer U> ? U: never
 
-declare type ValidatorRules = any
-
 declare type ObjectNonNullable<T> = {
   [p in keyof T]: NonNullable<T[p]>
 }
