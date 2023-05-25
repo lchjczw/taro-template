@@ -57,6 +57,11 @@ const cascaderProps = extend({}, popupSharedProps, {
 
 const DefaultOptionLabel = '选择选项'
 
+const popupPropsKeys = [
+  ...popupSharedPropKeys,
+  'safeAreaInsetBottom'
+] as const
+
 const [name, bem] = Bem('cascader')
 
 export default defineComponent({
@@ -80,6 +85,8 @@ export default defineComponent({
       value: 'value',
       children: 'children'
     }, props.fieldNames)
+
+    const updateShow = (show: boolean) => emit('update:show', show)
 
     const getSelectedOptionsByValue = (
       options: CascaderOption[],
@@ -152,7 +159,7 @@ export default defineComponent({
       props.onChange?.(params)
 
       if (!option[childrenKey]) {
-        onClose()
+        updateShow(false)
         props.onFinish?.(params)
       }
     }
@@ -162,8 +169,6 @@ export default defineComponent({
       updateScrollTop()
       props.onClickTab?.(tabIndex)
     }
-
-    const onClose = () => emit('update:show', false)
 
     const onReset = () => {
       tabs.value = []
@@ -393,12 +398,12 @@ export default defineComponent({
 
     return () => (
       <Popup
-        {...pick(props, [...popupSharedPropKeys, 'safeAreaInsetBottom'])}
+        {...pick(props, popupPropsKeys)}
         round
         closeable
         position="bottom"
         class={bem('popup')}
-        onClose={onClose}
+        onUpdate:show={props['onUpdate:show'] || updateShow}
       >
         <view class={bem()}>
           {renderTitle()}
