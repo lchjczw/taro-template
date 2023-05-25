@@ -124,5 +124,13 @@
     "launchMode": "default",
     "scene": null,
     "env": ["development"]
+  },
+  {
+    "title": "action-sheet-示例",
+    "page": "examples/action-sheet/index",
+    "query": "",
+    "launchMode": "default",
+    "scene": null,
+    "env": ["development"]
   }
 ]
