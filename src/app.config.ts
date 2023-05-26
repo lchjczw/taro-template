@@ -42,7 +42,8 @@ if (process.env.NODE_ENV === 'development') {
       'alert/index',
       'list/index',
       'footer-bar/index',
-      'action-sheet/index'
+      'action-sheet/index',
+      'count-down/index'
     ]
   })
 }
