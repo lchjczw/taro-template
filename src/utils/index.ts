@@ -1,5 +1,5 @@
 export * from './constants'
-export * from './def'
+export * from './type'
 export * from './version'
 export * from './utils'
 export * from './tarojs'
