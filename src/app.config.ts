@@ -47,12 +47,4 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-// 测试环境分包
-if (process.env.ENV === 'test') {
-  config.subpackages!.push({
-    root: 'tests',
-    pages: []
-  })
-}
-
 export default defineAppConfig(config)
