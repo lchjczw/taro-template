@@ -6,7 +6,7 @@ import { Button } from '@/components/button'
 import Bem from '@txjs/bem'
 import { defineComponent, reactive } from 'vue'
 import { validator } from '@txjs/vant-validator'
-import { makeStringMaps } from '@/utils'
+import { makeStringMap } from '@/utils'
 
 import less from './index.module.less'
 
@@ -21,7 +21,7 @@ export default defineComponent({
 
   setup() {
     const formModel = reactive({
-      ...makeStringMaps(
+      ...makeStringMap(
         'name',
         'telnumber',
         'password',
