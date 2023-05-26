@@ -5,7 +5,7 @@ export function makeStringDef(defaultVal?: string) {
   return defaultVal
 }
 
-export function makeStringMaps<T = string[]>(...keys: Array<keyof T>) {
+export function makeStringMap<T = string[]>(...keys: Array<keyof T>) {
   return keys.reduce(
     (maps, curr) => {
       maps[curr] = makeStringDef()
@@ -20,7 +20,7 @@ export function makeNumberDef(defaultVal?: number) {
   return defaultVal
 }
 
-export function makeNumberMaps<T = string[]>(...keys: Array<keyof T>) {
+export function makeNumberMap<T = string[]>(...keys: Array<keyof T>) {
   return keys.reduce(
     (maps, curr) => {
       maps[curr] = makeNumberDef()
