@@ -5,8 +5,7 @@ import _List, { ListProps, ListProvide } from './List'
 
 import './index.less'
 
-export const List = withInstall<typeof _List>(_List)
+export const List = withInstall(_List)
+export default List
 
 export type ListInstance = ComponentPublicInstance<ListProps, ListProvide>
-
-export default List

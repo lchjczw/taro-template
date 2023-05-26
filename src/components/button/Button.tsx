@@ -123,7 +123,7 @@ export default defineComponent({
       return style
     }
 
-    const onClick = (event: ITouchEvent) => {
+    const onTap = (event: ITouchEvent) => {
       if (props.loading) {
         preventDefault(event)
       } else if (!props.disabled) {
@@ -201,7 +201,7 @@ export default defineComponent({
           'onLaunchApp',
           'onOpenSetting'
         ]),
-        onTap: onClick
+        onTap: onTap
       }
 
       return (

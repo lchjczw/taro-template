@@ -91,7 +91,7 @@ export default defineComponent({
       border.value = value
     }
 
-    const onClick = (event: ITouchEvent) => {
+    const onTap = (event: ITouchEvent) => {
       props.onTap?.(event)
 
       if (props.url) {
@@ -204,7 +204,7 @@ export default defineComponent({
           hoverClass={bem('hover')}
           hoverStayTime={70}
           role={clickable ? 'button' : undefined}
-          onTap={onClick}
+          onTap={onTap}
         >
           {renderLeftIcon()}
           {renderTitle()}

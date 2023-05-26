@@ -6,22 +6,16 @@ import _Field from './Field'
 
 import './index.less'
 
-const Field = withInstall<typeof _Field>(_Field)
+export const Field = withInstall(_Field)
 
-_Form.Field = Field
-
-const Form = withInstall<typeof _Form & {
-  readonly Field: typeof Field
-}>(_Form)
+export const Form = withInstall(_Form, { Field })
 
 Form.install = (app: App) => {
   app.component(Field.name, Field)
   app.component(Form.name, Form)
 }
 
-export * from './types'
-
-export type { FormProps } from './Form'
-export { Form, Field }
-
 export default Form
+
+export * from './types'
+export type { FormProps } from './Form'

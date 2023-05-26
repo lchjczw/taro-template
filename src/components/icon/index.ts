@@ -3,8 +3,7 @@ import _Icon from './Icon'
 
 import './index.less'
 
-export const Icon = withInstall<typeof _Icon>(_Icon)
+export const Icon = withInstall(_Icon)
+export default Icon
 
 export type { IconName } from './types'
-
-export default Icon

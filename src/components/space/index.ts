@@ -3,9 +3,14 @@ import _Space from './Space'
 
 import './index.less'
 
-export const Space = withInstall<typeof _Space>(_Space)
+export const Space = withInstall(_Space)
+export default Space
 
 export { spaceProps } from './Space'
-export type { SpaceAlign, SpaceDirection, SpaceProps, SpaceSize } from './Space'
 
-export default Space
+export type {
+  SpaceAlign,
+  SpaceDirection,
+  SpaceProps,
+  SpaceSize
+} from './Space'

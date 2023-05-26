@@ -1,4 +1,4 @@
-import type { Rule } from '@txjs/vant-validator'
+import type { ValidatorRule } from '@txjs/vant-validator'
 import type {
   FormProvide,
   FieldTextAlign,
@@ -39,7 +39,7 @@ const formProps = {
   scrollToError: Boolean,
   validateFirst: Boolean,
   showErrorMessage: truthProp,
-  rules: Object as PropType<Record<string, Rule>>,
+  rules: Object as PropType<Record<string, ValidatorRule[]>>,
   titleAlign: String as PropType<FieldTextAlign>,
   inputAlign: String as PropType<FieldTextAlign>,
   requiredAlign: String as PropType<FieldRequiredAlign>,

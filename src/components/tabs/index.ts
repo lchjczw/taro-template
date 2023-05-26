@@ -6,18 +6,12 @@ import _Tab from './Tab'
 
 import './index.less'
 
-const Tab = withInstall<typeof _Tab>(_Tab)
-
-_Tabs.Item = Tab
-
-const Tabs = withInstall<typeof _Tabs & {
-  readonly Item: typeof Tab
-}>(_Tabs)
+export const Tab = withInstall(_Tab)
+export const Tabs = withInstall(_Tabs, { Tab })
 
 Tabs.install = (app: App) => {
   app.component(Tab.name, Tab)
   app.component(Tabs.name, Tabs)
 }
 
-export { Tab, Tabs }
 export default Tabs

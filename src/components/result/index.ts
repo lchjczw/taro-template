@@ -1,10 +1,10 @@
 import { withInstall } from '../utils'
-import _Result, { resultSharedProps } from './Result'
+import _Result from './Result'
 
 import './index.less'
 
-const Result = withInstall<typeof _Result>(_Result)
+export const Result = withInstall(_Result)
+export default Result
 
 export * from './types'
-export { Result, resultSharedProps }
-export default Result
+export { resultSharedProps } from './Result'

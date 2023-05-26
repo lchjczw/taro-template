@@ -1,8 +1,4 @@
-import {
-  inject,
-  watch,
-  type InjectionKey
-} from 'vue'
+import { inject, watch, type InjectionKey } from 'vue'
 
 export const POPUP_TOGGLE_KEY: InjectionKey<() => boolean> = Symbol()
 

@@ -80,7 +80,7 @@ export default defineComponent({
       return {}
     })
 
-    const onClick = (event: ITouchEvent) => {
+    const onTap = (event: ITouchEvent) => {
       if (!disabled.value) {
         props.onToggle?.()
       }
@@ -138,7 +138,7 @@ export default defineComponent({
             },
             direction.value
           ])}
-          onTap={onClick}
+          onTap={onTap}
         >
           {nodes}
         </view>

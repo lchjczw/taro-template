@@ -82,7 +82,7 @@ export default defineComponent({
       timer = setInterval(onTimer, 1000)
     }
 
-    const onClick = () => {
+    const onTap = () => {
       state.loading = true
       callInterceptor(props.beforeChange, {
         done: () => {
@@ -113,7 +113,7 @@ export default defineComponent({
       <Button
         {...pick(extend({}, props, state), buttonPropKeys)}
         class={bem()}
-        onTap={onClick}
+        onTap={onTap}
       >
         {renderText()}
       </Button>

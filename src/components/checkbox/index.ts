@@ -6,18 +6,16 @@ import _Group from './Group'
 
 import './index.less'
 
-const CheckboxGroup = withInstall<typeof _Group>(_Group)
+export const CheckboxGroup = withInstall(_Group)
 
-_Checkbox.Group = CheckboxGroup
-
-const Checkbox = withInstall<typeof _Checkbox & {
-  readonly Group: typeof CheckboxGroup
-}>(_Checkbox)
+export const Checkbox = withInstall(_Checkbox, { CheckboxGroup })
 
 Checkbox.install = (app: App) => {
   app.component(CheckboxGroup.name, CheckboxGroup)
   app.component(Checkbox.name, Checkbox)
 }
+
+export default Checkbox
 
 export { checkboxGroupProps } from './Group'
 export { checkboxProps } from './Checkbox'
@@ -26,13 +24,10 @@ export type { CheckboxProps } from './Checkbox'
 export type { CheckboxGroupProps } from './Group'
 
 export type {
-  CheckboxShape,
-  CheckboxInstance,
-  CheckboxLabelPosition,
-  CheckboxGroupDirection,
-  CheckboxGroupToggleAllOptions,
-  CheckboxGroupInstance
+ CheckboxShape,
+ CheckboxInstance,
+ CheckboxLabelPosition,
+ CheckboxGroupDirection,
+ CheckboxGroupToggleAllOptions,
+ CheckboxGroupInstance
 } from './types'
-
-export { CheckboxGroup, Checkbox }
-export default Checkbox

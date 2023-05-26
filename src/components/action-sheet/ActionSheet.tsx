@@ -125,7 +125,7 @@ export default defineComponent({
     const renderOption = (option: ActionSheetOption, index: number) => {
       const { color, loading, disabled, className, callback } = option
 
-      const onClick = () => {
+      const onTap = () => {
         if (loading || disabled) {
           return
         }
@@ -151,7 +151,7 @@ export default defineComponent({
           iconPosition="right"
           class={[bem('option', { unclickable: loading || disabled }), className]}
           style={{ color }}
-          onTap={onClick}
+          onTap={onTap}
         >
           {renderOptionContent(option, index)}
         </Button>
