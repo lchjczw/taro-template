@@ -2,7 +2,7 @@ import type { App, Component } from 'vue'
 import type { CustomShim } from './types'
 
 import extend from 'extend'
-import { camelize } from '@/utils'
+import { camelize } from '@txjs/shared'
 
 type EventShim = CustomShim<{
   onTap?: Callback
