@@ -1,19 +1,6 @@
 import { isNil, isNumeric } from '@txjs/bool'
 
 /**
- * 字符串驼峰式
- *
- * @example
- * ```ts
- * camelize('-a-b-c')
- * // => ABC
- * ```
- */
-export function camelize(value = '') {
-  return value.replace(/-(\w)/g, (_, c) => c.toUpperCase())
-}
-
-/**
  * css样式添加
  *
  * @example
