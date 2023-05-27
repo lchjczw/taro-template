@@ -1,5 +1,5 @@
 import extend from 'extend'
-import { camelize } from '@/utils'
+import { camelize } from '@txjs/shared'
 
 const generateName = (value: string) => value
   .replace(/^\.\//g, '')
