@@ -81,6 +81,13 @@ const config = {
     [resolve('plugins/mini-prompt')],
     [resolve('plugins/pollen')],
     [resolve('plugins/env')],
+    ['@tarojs/plugin-framework-vue3', {
+      vueLoaderOption: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('custom')
+        }
+      }
+    }],
     ['taro-plugin-style-resource', {
       less: {
         patterns: [
