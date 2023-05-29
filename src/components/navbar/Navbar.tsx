@@ -198,7 +198,7 @@ export default defineComponent({
             class={[bem('left'), props.leftClass]}
             style={leftStyle.value}
           >
-            {slots.left?.() || state.leftArrowVisible && (
+            {slots.left?.() || state.leftArrowVisible ? (
               <Icon
                 size={40}
                 name={history ? 'arrow-left' : 'wap-home-o'}
@@ -206,7 +206,7 @@ export default defineComponent({
                 class={bem('left-icon')}
                 onTap={onBack}
               />
-            )}
+            ) : null}
           </view>
         )
       }
@@ -226,9 +226,7 @@ export default defineComponent({
     }
 
     const renderTitle = () => {
-      const title = slots.default || titleText.value
-
-      if (title) {
+      if (slots.default || titleText.value) {
         return (
           <view
             class={[bem('title', { 'no-left': !showLeft.value && !props.leftArrowNoPaddingLeft }), props.titleClass]}

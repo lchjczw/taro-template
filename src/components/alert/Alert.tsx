@@ -2,7 +2,6 @@ import type { ITouchEvent } from '@tarojs/components'
 import { Icon, type IconName } from '../icon'
 
 import Bem from '@txjs/bem'
-import { isFunction } from '@txjs/bool'
 
 import {
   defineComponent,
@@ -49,9 +48,13 @@ export default defineComponent({
       return 'info'
     })
 
-    const showIcon = computed(() => props.banner || props.showIcon)
+    const showIcon = computed(() =>
+      props.banner || props.showIcon
+    )
 
-    const withDescription = computed(() => !!slots.description || props.description)
+    const withDescription = computed(() =>
+      !!slots.description || props.description
+    )
 
     const iconName = computed(() => {
       if (props.icon) {
@@ -107,12 +110,10 @@ export default defineComponent({
     }
 
     const renderMessage = () => {
-      const message = props.message || slots.message
-
-      if (message) {
+      if (slots.message || props.message) {
         return (
           <view class={bem('message')}>
-            {isFunction(message) ? slots.message!() : message}
+            {slots.message?.() || props.message}
           </view>
         )
       }
@@ -122,7 +123,7 @@ export default defineComponent({
       if (withDescription.value) {
         return (
           <view class={bem('description')}>
-            {isFunction(slots.description) ? slots.description!() : props.description}
+            {slots.description?.() || props.description}
           </view>
         )
       }
@@ -145,7 +146,7 @@ export default defineComponent({
             class={bem('close-icon')}
             onTap={onClose}
           >
-            {slots.closeIcon ? slots.closeIcon() : props.closeText ? (
+            {slots.closeIcon?.() || props.closeText ? (
               <text>{props.closeText}</text>
             ) : (
               <Icon name="cross" />
@@ -163,9 +164,7 @@ export default defineComponent({
       return (
         <Transition
           name="alert-fade"
-          onAfterLeave={() => {
-            closed.value = true
-          }}
+          onAfterLeave={() => closed.value = true}
         >
           <view
             v-show={!closing.value}

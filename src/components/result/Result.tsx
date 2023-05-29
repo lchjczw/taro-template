@@ -51,7 +51,7 @@ export default defineComponent({
 
     const merge = (...args: ResultOption[]) => extend(state, ...args)
 
-    const getNode = (vnode?: string | VueSlotVNode | null) => isFunction(vnode) ? vnode() : vnode
+    const getNode = (node?: string | VueSlotVNode | null) => isFunction(node) ? node() : node
 
     const withStatus = (
       status: string,

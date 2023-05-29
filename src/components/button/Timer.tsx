@@ -104,7 +104,7 @@ export default defineComponent({
         return props.afterText
       }
 
-      return slots.default?.() ?? props.text
+      return slots.default?.() || props.text
     }
 
     onUnmounted(onClear)

@@ -626,19 +626,19 @@ export default defineComponent({
     const renderFieldBody = () => [
       <view class={bem('body', { textarea: props.type === 'textarea' })}>
         {renderInput()}
-        {showClear.value && (
+        {showClear.value ? (
           <Icon
             name={props.clearIcon}
             class={bem('clear')}
             onTouchStart={onClear}
           />
-        )}
+        ) : null}
         {renderRightIcon()}
-        {slots.button && (
+        {slots.button ? (
           <view class={bem('button')}>
             {slots.button()}
           </view>
-        )}
+        ) : null}
       </view>,
       renderWordLimit(),
       renderMessage()

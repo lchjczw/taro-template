@@ -249,7 +249,7 @@ export default defineComponent({
       if (slots.title || props.title) {
         return (
           <view class={bem('title')}>
-            {slots.title ? slots.title() : props.title}
+            {slots.title?.() || props.title}
           </view>
         )
       }

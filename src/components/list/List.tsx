@@ -95,41 +95,43 @@ export default defineComponent({
     }
 
     const renderFinishedText = () => {
-      if (props.finished) {
-        if (props.data.length === 0) {
-          return (
-            <Result
-              status="nodata"
-              title={noop}
-              desc="暂无数据"
-            />
-          )
-        }
+      if (!props.finished) {
+        return
+      }
 
-        const text = slots.finished?.() || props.finishedText
+      if (props.data.length === 0) {
+        return (
+          <Result
+            status="nodata"
+            title={noop}
+            desc="暂无数据"
+          />
+        )
+      }
 
-        if (text) {
-          return (
-            <view class={bem('finished-text')}>{text}</view>
-          )
-        }
+      if (slots.finished || props.finishedText) {
+        return (
+          <view class={bem('finished-text')}>
+            {slots.finished?.() || props.finishedText}
+          </view>
+        )
       }
     }
 
     const renderErrorText = () => {
-      if (props.error) {
-        const text = slots.error?.() || props.errorText
+      if (!props.error) {
+        return
+      }
 
-        if (text) {
-          return (
-            <view
-              class={bem('error-text')}
-              onTap={onClickErrorText}
-            >
-              {text}
-            </view>
-          )
-        }
+      if (slots.error || props.errorText) {
+        return (
+          <view
+            class={bem('error-text')}
+            onTap={onClickErrorText}
+          >
+            {slots.error?.() || props.errorText}
+          </view>
+        )
       }
     }
 

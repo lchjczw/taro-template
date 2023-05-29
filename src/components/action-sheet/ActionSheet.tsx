@@ -79,10 +79,10 @@ export default defineComponent({
     }
 
     const renderDescription = () => {
-      if (props.description || props.description) {
+      if (slots.description || props.description) {
         return (
           <view class={bem('description')}>
-            {slots.description ? slots.description() : props.description}
+            {slots.description?.() || props.description}
           </view>
         )
       }
@@ -100,7 +100,7 @@ export default defineComponent({
               class={bem('cancel')}
               onTap={onCancel}
             >
-              {slots.cancel ? slots.cancel() : props.cancelText}
+              {slots.cancel?.() || props.cancelText}
             </Button>
           </>
         )

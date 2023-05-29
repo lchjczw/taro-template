@@ -122,12 +122,10 @@ export default defineComponent({
     }
 
     const renderLabel = () => {
-      const showLabel = slots.label ?? notNil(props.label)
-
-      if (showLabel) {
+      if (slots.label || notNil(props.label)) {
         return (
           <view class={[bem('label'), props.labelClass]}>
-            {slots.label?.() ?? props.label}
+            {slots.label?.() || props.label}
           </view>
         )
       }

@@ -76,7 +76,7 @@ export default defineComponent({
         role="timer"
         class={bem()}
       >
-        {slots.default ? slots.default(current.value) : timeText.value}
+        {slots.default?.(current.value) || timeText.value}
       </view>
     )
   }

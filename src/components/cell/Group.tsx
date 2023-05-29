@@ -73,7 +73,7 @@ export default defineComponent({
     )
 
     return () => {
-      if (props.title || slots.title) {
+      if (slots.title || props.title) {
         return (
           <>
             {renderTitle()}
