@@ -4,6 +4,42 @@
 >
 > 抖音小程序部分不支持，请查阅tarojs官方文档
 
+## 注意事项
+
+##### 关于 `vue3` 自定义组件 `isCustomElement` 配置
+
+.jsx/.tsx `@vue/babel-preset-jsx`
+
+```ts
+// babel.config.js
+module.exports = {
+  presets: {
+    ['taro', {
+      ...
+      vueJsx: {
+        isCustomElement: (tag) => tag.startsWith('custom')
+      }
+    }]
+  }
+}
+```
+
+.vue原生模板 `@tarojs/plugin-framework-vue3`
+
+```ts
+const config = {
+  plugins: [
+    ['@tarojs/plugin-framework-vue3', {
+      vueLoaderOption: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('custom')
+        }
+      }
+    }]
+  ]
+}
+```
+
 ## 环境配置
 
 > 所有环境配置都会被注入 `process.env`，可以开发全局使用
